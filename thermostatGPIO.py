@@ -116,6 +116,6 @@ class ThermostatGPIO():
                 ts.errors=True
 
                 
-            time.sleep(self.interval)
+            time.sleep(interval)
 
 tg=ThermostatGPIO()
