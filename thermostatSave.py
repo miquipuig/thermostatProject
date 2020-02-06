@@ -10,5 +10,5 @@ class ThermostatSave(object):
         thread.start()
 
 
-    def run(self, interval=1):
-        tg.saveloop(interval)
+    def run(self):
+        tg.saveloop(1)
