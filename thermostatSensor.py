@@ -14,5 +14,5 @@ class ThermostatSensor(object):
 
     def run(self):
         tg.callback_init()
-        tg.readloop(self.interval(self.interval))
+        tg.readloop(self.interval)
         
