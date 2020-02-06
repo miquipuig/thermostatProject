@@ -2,5 +2,7 @@ pillow
 numpy
 flask
 matplotlib
-request
+requests
+Adafruit_DHT
+RPi.GPIO
 
