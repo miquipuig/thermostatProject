@@ -1,0 +1,6 @@
+pillow
+numpy
+flask
+matplotlib
+request
+
