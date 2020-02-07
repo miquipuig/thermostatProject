@@ -53,8 +53,8 @@ class ThermostatScreen:
     def __init__(self):
 
         self.root = tk.Tk()
-        # self.root.attributes("-fullscreen", True)
-        # self.root.config(cursor='none')
+        self.root.attributes("-fullscreen", True)
+        self.root.config(cursor='none')
         self.root.wm_attributes("-topmost", True)
         self.root.wm_attributes("-alpha", True)
         self.root.configure(background=bg)
