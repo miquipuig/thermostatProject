@@ -15,6 +15,7 @@ pin = 26 #PIN SENSOR DHT22 - 26
 class ThermostatGPIO():
     gpioB = 16 #Rotatory sensor - 16 & 12
     gpioA = 12 #Rotatory sensor - 16 & 12
+    gpioC = 
     levA = 0
     levB = 0
     GPIO.setmode(GPIO.BCM)
@@ -34,7 +35,7 @@ class ThermostatGPIO():
     
     def callback_init(self):
         GPIO.add_event_detect(self.gpioA, GPIO.BOTH , self._callbackA)
-        GPIO.add_event_detect(self.gpioB, GPIO.BOTH , self._callbackA)pin
+        GPIO.add_event_detect(self.gpioB, GPIO.BOTH , self._callbackA)
 
     def _callbackA(self,channel):
         level = GPIO.input(channel)
