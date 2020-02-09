@@ -9,17 +9,17 @@ from datetime import datetime
 from thermostatService import ts
 import random
 sensor = Adafruit_DHT.DHT22
-pin = 26
+pin = 26 #PIN SENSOR DHT22 - 26
 
 
 class ThermostatGPIO():
-    gpioB = 16
-    gpioA = 12
+    gpioB = 16 #Rotatory sensor - 16 & 12
+    gpioA = 12 #Rotatory sensor - 16 & 12
     levA = 0
     levB = 0
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
-    GPIO.setup(13,GPIO.OUT)
+    GPIO.setup(13,GPIO.OUT) # Relay - 13
     GPIO.setup(16,GPIO.OUT)
     GPIO.output(13,GPIO.LOW)
 
@@ -34,8 +34,7 @@ class ThermostatGPIO():
     
     def callback_init(self):
         GPIO.add_event_detect(self.gpioA, GPIO.BOTH , self._callbackA)
-        GPIO.add_event_detect(self.gpioB, GPIO.BOTH , self._callbackA)
-        # Corrriente pin 13
+        GPIO.add_event_detect(self.gpioB, GPIO.BOTH , self._callbackA)pin
 
     def _callbackA(self,channel):
         level = GPIO.input(channel)
