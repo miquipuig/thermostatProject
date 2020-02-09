@@ -15,7 +15,7 @@ pin = 26 #PIN SENSOR DHT22 - 26
 class ThermostatGPIO():
     gpioB = 16 #Rotatory sensor - 16 & 12
     gpioA = 12 #Rotatory sensor - 16 & 12
-    gpioC = 
+    gpioC = 21
     levA = 0
     levB = 0
     GPIO.setmode(GPIO.BCM)
