@@ -1,2 +1,2 @@
 export DISPLAY=:0
-python3 thermostatProject/thermostatStart.py
+xinit /bin/sh -c 'exec python3 thermostat/thermostatStart.py
