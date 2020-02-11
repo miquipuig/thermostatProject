@@ -1,4 +1,5 @@
 export DISPLAY=:0
+xset q
 xset -dpms
 xset s noblank
 xset s off 
