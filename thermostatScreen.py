@@ -295,10 +295,11 @@ class ThermostatScreen:
             x=ts.th.extractHistoricData(0)
             y=ts.th.extractHistoricData(1)
             z=ts.th.extractHistoricData(2)
+            try:
             self.ax.clear()
             self.ax.plot(x,y,linewidth=3)
             self.ax.plot(x,z)
-            try:
+            
                 self.fig.canvas.draw_idle()
             except Exception as ex:
                 print(ex)
