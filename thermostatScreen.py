@@ -298,7 +298,10 @@ class ThermostatScreen:
             self.ax.clear()
             self.ax.plot(x,y,linewidth=3)
             self.ax.plot(x,z)
-            self.fig.canvas.draw_idle()
+            try:
+                self.fig.canvas.draw_idle()
+            except Exception as ex:
+                print(ex)
             # self.fig.canvas.flush_events()
             self.count=0
             ts.refreshDataListener=False
