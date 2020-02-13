@@ -3,6 +3,6 @@ numpy
 flask
 matplotlib
 requests
-Adafruit_DHT
 RPi.GPIO
+Adafruit_DHT
 

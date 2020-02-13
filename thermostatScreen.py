@@ -53,8 +53,8 @@ class ThermostatScreen:
     def __init__(self):
 
         self.root = tk.Tk()
-        self.root.attributes("-fullscreen", True)
-        self.root.config(cursor='none')
+       # self.root.attributes("-fullscreen", True)
+       # self.root.config(cursor='none')
         self.root.wm_attributes("-topmost", True)
         self.root.wm_attributes("-alpha", True)
         self.root.configure(background=bg)
@@ -296,10 +296,9 @@ class ThermostatScreen:
             y=ts.th.extractHistoricData(1)
             z=ts.th.extractHistoricData(2)
             try:
-            self.ax.clear()
-            self.ax.plot(x,y,linewidth=3)
-            self.ax.plot(x,z)
-            
+                self.ax.clear()
+                self.ax.plot(x,y,linewidth=3)
+                self.ax.plot(x,z)
                 self.fig.canvas.draw_idle()
             except Exception as ex:
                 print(ex)
