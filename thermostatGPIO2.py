@@ -1,17 +1,32 @@
-# import Adafruit_DHT
-# import RPi.GPIO as GPIO
+import Adafruit_DHT
+import RPi.GPIO as GPIO
 import threading
 import numpy as np
+import Adafruit_DHT
+import RPi.GPIO as GPIO
 import time
 from datetime import datetime
 from thermostatService import ts
 import random
-# sensor = Adafruit_DHT.DHT22
-pin = 26
+sensor = Adafruit_DHT.DHT22
+pin = 26 #PIN SENSOR DHT22 - 26
 
 
 class ThermostatGPIO():
-  
+    gpioB = 16 #Rotatory sensor - 16 & 12
+    gpioA = 12 #Rotatory sensor - 16 & 12
+    gpioC = 21
+    levA = 0
+    levB = 0
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(13,GPIO.OUT) # Relay - 13
+    # GPIO.setup(16,GPIO.OUT)
+    GPIO.output(13,GPIO.LOW)
+
+    #Rotatory
+    GPIO.setup(gpioA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(gpioB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     
     temperature=np.ones(7)*20
     humidity=np.ones(7)*50
@@ -19,8 +34,8 @@ class ThermostatGPIO():
 
     
     def callback_init(self):
-        print('callback init')
-        # Corrriente pin 13
+        GPIO.add_event_detect(self.gpioA, GPIO.BOTH , self._callbackA)
+        GPIO.add_event_detect(self.gpioB, GPIO.BOTH , self._callbackA)
 
     def _callbackA(self,channel):
         level = GPIO.input(channel)
@@ -42,10 +57,7 @@ class ThermostatGPIO():
         count=0
         
         while True:
-
-            t=random.gauss(20,4)
-            h=random.gauss(50,5)
-            # h, t = Adafruit_DHT.read_retry(sensor, pin)
+            h, t = Adafruit_DHT.read_retry(sensor, pin)
             if h is not None and t is not None:
                 
                 
@@ -64,10 +76,14 @@ class ThermostatGPIO():
                 
                 # https://api.openweathermap.org/data/2.5/weather?zip=08014,es&appid=35bef01f2be23b616aa0457916b79b5d
                 
-               
+                if (ts.startHeater()):
+                    GPIO.output(13,GPIO.HIGH)
+                else:
+                    GPIO.output(13,GPIO.LOW)
         
             else:
                 print("Failed to get data from sensor.") 
+                GPIO.output(13,GPIO.LOW)
                 ts.errors=True
             
                   
@@ -80,7 +96,7 @@ class ThermostatGPIO():
                 
             time.sleep(interval)
     
-    def saveloop(self,interval):
+    def saveloop(self, interval):
         upState=True
         while True:
             # More statements comes here
@@ -88,15 +104,15 @@ class ThermostatGPIO():
             #Refresh pin
             try:
                 if (ts.onOff() and upState):
-                        # GPIO.output(13,GPIO.HIGH)
+                        GPIO.output(13,GPIO.HIGH)
                         upState=False
                 elif(ts.started==False or ts.errors or ts.power==False):
-                    # GPIO.output(13,GPIO.LOW)
+                    GPIO.output(13,GPIO.LOW)
                     upState=True
             
             except Exception as ex:
                 print(ex)
-                # GPIO.output(13,GPIO.LOW)
+                GPIO.output(13,GPIO.LOW)
                 ts.errors=True
 
                 
