@@ -18,7 +18,7 @@ except ImportError:
     import Tkinter as tk
     import tkFont
 
-import time
+import time as time
 import datetime
 import threading
 #images
@@ -29,8 +29,7 @@ from thermostatService import ts
 import random
 
 
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 # Implement the default Matplotlib key bindings.
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
@@ -286,8 +285,8 @@ class ThermostatScreen:
 
     def refresh_label(self):
         # self.txt2.set(time.strftime("%H:%M:%S"))
-        self.horaText.set(time.strftime('%-I:%M:%S %p'))
-    
+        # self.horaText.set(time.strftime('%-I:%M:%S %p'))
+        self.horaText.set(time.strftime("%H:%M:%S %p"))
         if(ts.refreshDataListener):
             self.txt3.set("{0:0.1f}{1}C {2:0.1f}%".format(ts.temp,self.gradeSymbol,ts.humidity ))
             #DIAGRAM
