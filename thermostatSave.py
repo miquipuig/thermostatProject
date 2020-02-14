@@ -1,6 +1,10 @@
 import threading
-from thermostatGPIO import tg
-
+import sys
+if(len(sys.argv)>1 and sys.argv[1]=='test'):
+    env='TST'
+    from thermostatGPIO_test import tg
+else:
+    from thermostatGPIO import tg
 
 class ThermostatSave(object):
     def __init__(self):        
