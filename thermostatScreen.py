@@ -78,7 +78,9 @@ class ThermostatScreen:
         #   BUTTONS
         #-------------
         self.fnt1 = tkFont.Font(family='Digital-7 Mono', size=25, weight='normal')
-        self.fnt2 = tkFont.Font( family='Garden Grown US', size=110, weight='normal')
+        self.fnt1 = tkFont.Font(family='Digital-7 Mono', size=20 , weight='normal')
+        # self.fnt1 = tkFont.Font(family='Arial', size=25)
+        self.fnt2 = tkFont.Font( family='Garden Grown US', size=125, weight='normal')
         self.fnt3 = tkFont.Font( family='Arial', size=70, weight='bold')
         self.fnt4 = tkFont.Font( family='Calibri', size=20, weight='bold')      
 
@@ -93,15 +95,15 @@ class ThermostatScreen:
         # self.powerBTN.grid(row = 0, column = 0 )
         self.plusBTN = tk.Button(parent, width=1, height=0, text ="+",bd=0,highlightthickness=0, relief=tk.RIDGE,activebackground=colorButton,bg=colorButton,activeforeground=colorSymbolButton, fg=colorSymbolButton, font = self.fnt3)
         #Seccion temperatura
-        self.plusBTN.place(relx=0.75, rely=0.23,anchor=tk.NW)
-        self.plusBTN.bind('<Button-1>',self.sumaD)
-        self.plusBTN.bind('<ButtonRelease-1>',self.sumaU)
-        self.lessBTN = tk.Button(parent, width=1, height=0, text ="-",bd=0,highlightthickness=0, relief=tk.RIDGE,activebackground=colorButton,bg=colorButton,activeforeground=colorSymbolButton, fg=colorSymbolButton, font = self.fnt3)
-        self.lessBTN.place(relx=0.25, rely=0.23,anchor=tk.NE)
-        self.lessBTN.bind('<Button-1>',self.restaD)
-        self.lessBTN.bind('<ButtonRelease-1>',self.restaU)      
-        self.tempLabel = tk.Label(text="%0.1f%s" % (ts.desiredT , self.gradeSymbol), font=self.fnt2, foreground='white',background=bg, anchor='e',width=5) 
-        self.tempLabel.place(relx=0.45, rely=0.48,anchor=tk.CENTER)
+        # self.plusBTN.place(relx=0.75, rely=0.23,anchor=tk.NW)
+        # self.plusBTN.bind('<Button-1>',self.sumaD)
+        # self.plusBTN.bind('<ButtonRelease-1>',self.sumaU)
+        # self.lessBTN = tk.Button(parent, width=1, height=0, text ="-",bd=0,highlightthickness=0, relief=tk.RIDGE,activebackground=colorButton,bg=colorButton,activeforeground=colorSymbolButton, fg=colorSymbolButton, font = self.fnt3)
+        # self.lessBTN.place(relx=0.25, rely=0.23,anchor=tk.NE)
+        # self.lessBTN.bind('<Button-1>',self.restaD)
+        # self.lessBTN.bind('<ButtonRelease-1>',self.restaU)      
+        # self.tempLabel = tk.Label(text="%0.1f%s" % (ts.desiredT , self.gradeSymbol), font=self.fnt2, foreground='white',background=bg, anchor='e',width=5) 
+        # self.tempLabel.place(relx=0.45, rely=0.48,anchor=tk.CENTER)
         
         #Hora y temperatura ambiente
         self.horaText = tk.StringVar()
@@ -141,7 +143,7 @@ class ThermostatScreen:
         
       
         #BOTTOM CANVAS
-        self.canvas = Canvas(parent, width=480, height=320, bg=bg, bd=0, highlightthickness=0, relief='ridge')
+        self.canvas = Canvas(parent, width=480, height=280, bg=bg, bd=0, highlightthickness=0, relief='ridge')
         self.canvas.place(relx=1, rely=0,anchor=tk.NE)    
             
         
@@ -163,15 +165,18 @@ class ThermostatScreen:
         
         self.power=self.canvas.create_image(40, 35, image=self.powerDown)
         self.image=self.canvas.create_image(440, 35, image=self.sun)
-
-        self.weatherIcon=self.canvas.create_image(200,35, image=self.weather, tag='weather')
         self.ecoImage=self.canvas.create_image(100, 80, image=self.eco)
+        
         self.canvas.itemconfig(self.ecoImage, state = 'hidden')  
-        self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,
-                        text=str(ts.weatherTemp) + 'º', stipple='error', tag='weather')
+        
         #SELECTED TEMPERATURE
-        self.timeText=self.canvas.create_text(250,155,fill=twhite,font=self.fnt2,
-                        text="%0.1f%s" % (20.8 , self.gradeSymbol))
+        self.tempText2=self.canvas.create_text(360,155,fill=twhite,font=self.fnt2,
+                        text="%0.0fº" % (ts.desiredT%1*10 ), anchor='e')
+        self.tempText1=self.canvas.create_text(265,155,fill=twhite,font=self.fnt2,
+                        text="%i" % (ts.desiredT), anchor='e')
+        
+        
+        self.ecoImage=self.canvas.create_image(110, 80, image=self.eco)
         #PLUS/MINUS BUTTON
         self.minusButton=self.canvas.create_text(110,130,fill=tblue,font=self.fnt3, text="-")
         self.plusButton=self.canvas.create_text(360,143,fill=tblue,font=self.fnt3, text="+")  
@@ -180,6 +185,16 @@ class ThermostatScreen:
         self.canvas.tag_bind(self.plusButton, '<Button-1>', self.sumaD)
         self.canvas.tag_bind(self.plusButton, '<ButtonRelease-1>', self.sumaU)
         
+        #WEATHER INFO
+        self.weatherIcon=self.canvas.create_image(200,35, image=self.weather, tag='weather')
+        self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,text=str(ts.weatherTemp) + 'º', tag='weather')
+        # self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,text='HOLA', tag='weather')
+        
+        #TIME & LECTURES
+        # self.timeText=self.canvas.create_text(475,300,fill=twhite,font=self.fnt1,text=time.strftime('%-I:%M:%S %p'), tag='time',anchor='e')
+        # self.lecturesText=self.canvas.create_text(5,300,fill=twhite,font=self.fnt1,text="{0:0.0f}{1}C {2:0.1f}%".format(ts.temp,self.gradeSymbol,ts.humidity), tag='time',anchor='w')
+
+        #POWER BUTTON
         if (ts.power==True):
             self.power=self.canvas.create_image(40, 35, image=self.powerUp)
         else:
@@ -262,7 +277,7 @@ class ThermostatScreen:
         # #ax.legend(title='Parameter where:') #legend
         
         self.count=0
-        self.tempLabel.after(500, self.refresh_label)
+        self.canvas.after(500, self.refresh_canvas)
         
     def moonSunClick(self, event):
         global bg
@@ -292,12 +307,15 @@ class ThermostatScreen:
         else:
             self.canvas.itemconfig(self.power, image = self.powerDown)
 
-    def refresh_label(self):
+    def refresh_canvas(self):
         # self.txt2.set(time.strftime("%H:%M:%S"))
-        # self.horaText.set(time.strftime('%-I:%M:%S %p'))
-        self.horaText.set(time.strftime("%H:%M:%S %p"))
+        self.horaText.set(time.strftime('%-I:%M:%S %p'))                
+        # self.canvas.itemconfig(self.timeText,text=time.strftime('%-I:%M:%S %p'))
+
+ 
         if(ts.refreshDataListener):
-            self.txt3.set("{0:0.1f}{1}C {2:0.1f}%".format(ts.temp,self.gradeSymbol,ts.humidity ))
+            # self.canvas.itemconfig(self.lecturesText,text="{0:0.0f}{1}C {2:0.1f}%")
+            self.txt3.set("{0:0.1f}{1}C {2:0.1f}%".format(ts.temp,self.gradeSymbol,ts.humidity))
             #DIAGRAM
             # ts.updateFake()
             # self.y.set_xdata(ts.historicData[0]) 
@@ -325,28 +343,28 @@ class ThermostatScreen:
         if(ts.refreshDesiredConf):
             self.refresh_tempLabel_full()
         
-        self.tempLabel.after(500, self.refresh_label)
+        self.canvas.after(500, self.refresh_canvas)
         
     def refresh_tempLabel(self):
         # self.tempLabel.configure(text="%s%sC" % (str(np.around(ts.desiredT, decimals=1)) , self.gradeSymbol))
         # self.tempLabel.configure(text="%0.1f%s" % (ts.desiredT , self.gradeSymbol))
-        self.canvas.itemconfig(self.timeText,text=str(ts.desiredT) + 'º')
-        # self.canvas.itemconfig(self.weatherText,text=str(ts.weatherTemp) + 'º')
-        self.canvas.itemconfig(self.weatherText,text=str(ts.weatherTemp) + 'º')
-        # self.canvas.delete(self.weatherText)
-        # self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,
-        #                 text=str(ts.weatherTemp) + 'º', stipple='error')
-        
+        self.canvas.itemconfig(self.tempText2,text="%0.0fº" % (ts.desiredT%1*10))
+        self.canvas.itemconfig(self.tempText1,text="%i." % (ts.desiredT))
+
+       
     def refresh_tempLabel_full(self):
         # self.tempLabel.configure(text="%s%sC" % (str(np.around(ts.desiredT, decimals=1)) , self.gradeSymbol))
         ts.startHeater()
-        self.tempLabel.configure(text="%0.1f%s" % (ts.desiredT , self.gradeSymbol))
+        self.refresh_tempLabel()
         if (ts.started and ts.power):
-            self.tempLabel.configure(foreground=tred)
+            self.canvas.itemconfig(self.tempText2,fill=tred)
+            self.canvas.itemconfig(self.tempText1,fill=tred)
         elif (ts.tAchieved and ts.power):
-            self.tempLabel.configure(foreground=tgreen)
+            self.canvas.itemconfig(self.tempText2,fill=tgreen)
+            self.canvas.itemconfig(self.tempText1,fill=tgreen)
         else:
-            self.tempLabel.configure(foreground='white')
+            self.canvas.itemconfig(self.tempText2,fill='white')
+            self.canvas.itemconfig(self.tempText1,fill='white')
         ts.refreshDesiredConf=False
         self.refreshEcoState()
     
