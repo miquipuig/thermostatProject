@@ -82,7 +82,7 @@ class ThermostatService:
                 self.weatherTemp=np.around(resp_dict['main']['temp']-273.15,decimals=1)
                 self.weatherTemp_min=np.around(resp_dict['main']['temp_min']-273.15,decimals=1)
                 self.weatherTemp_max=np.around(resp_dict['main']['temp_max']-273.15,decimals=1)
-                self.weatherHumidity=np.around(resp_dict['main']['humidity']-273.15,decimals=2)
+                self.weatherHumidity=np.around(resp_dict['main']['humidity'],decimals=0)
                 self.weatherIcon=json.loads(json.dumps(resp_dict['weather'][0]))['icon']
                 self.weatherDesciption=json.loads(json.dumps(resp_dict['weather'][0]))['description']
             except Exception as ex:

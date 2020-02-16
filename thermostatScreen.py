@@ -184,8 +184,8 @@ class ThermostatScreen:
         self.canvas.tag_bind(self.plusButton, '<ButtonRelease-1>', self.sumaU)
         
         #WEATHER INFO
-        self.weatherIcon=self.canvas.create_image(200,35, image=self.weather, tag='weather')
-        self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,text=str(ts.weatherTemp) + 'º', tag='weather')
+        self.weatherIcon=self.canvas.create_image(180,35, image=self.weather, tag='weather')
+        self.weatherText=self.canvas.create_text(210,30,fill=twhite,font=self.fnt1,text=str(ts.weatherTemp) + 'º ' + str(ts.weatherHumidity)+'%', tag='weather',anchor='w')
         # self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,text='HOLA', tag='weather')
         
         #TIME & LECTURES
@@ -335,8 +335,8 @@ class ThermostatScreen:
             self.weather= self.weather.resize((80, 80), Image.ANTIALIAS)
             self.weather = ImageTk.PhotoImage(self.weather)
             self.canvas.itemconfig(self.weatherIcon, image = self.weather)
-            self.canvas.itemconfig(self.weatherText,text=str(ts.weatherTemp) + 'º')
-            
+            self.canvas.itemconfig(self.weatherText,text=str(ts.weatherTemp) + 'º ' + str(ts.weatherHumidity)+'%')
+            print(ts.weatherHumidity)
             
         if(ts.refreshDesiredConf):
             self.refresh_tempLabel_full()
