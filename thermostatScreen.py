@@ -138,16 +138,14 @@ class ThermostatScreen:
         self.eco= self.eco.resize((80, 80), Image.ANTIALIAS)
         self.eco = ImageTk.PhotoImage(self.eco)
 
+        
       
         #BOTTOM CANVAS
-        self.canvas = Canvas(parent, width=480, height=64, bg=bg, bd=0, highlightthickness=0, relief='ridge')
+        self.canvas = Canvas(parent, width=480, height=320, bg=bg, bd=0, highlightthickness=0, relief='ridge')
         self.canvas.place(relx=1, rely=0,anchor=tk.NE)    
         
-        #ECO CANVAS
-        self.ecoCanvas = Canvas(parent, width=80, height=80, bg=bg, bd=0, highlightthickness=0, relief='ridge')
-        self.ecoCanvas.place(relx=0.31, rely=0.12,anchor=tk.NE) 
-        self.ecoImage=self.ecoCanvas.create_image(40, 40, image=self.eco)
-        self.ecoCanvas.itemconfig(self.ecoImage, state = 'hidden')  
+        #ECO IMAGE
+
             
         
         # self.power = ImageTk.PhotoImage(self.power)
@@ -167,8 +165,13 @@ class ThermostatScreen:
         
         self.power=self.canvas.create_image(40, 35, image=self.powerDown)
         self.image=self.canvas.create_image(440, 35, image=self.sun)
+
         self.weatherIcon=self.canvas.create_image(200,35, image=self.weather)
+        self.ecoImage=self.canvas.create_image(100, 80, image=self.eco)
+        self.canvas.itemconfig(self.ecoImage, state = 'hidden')  
         self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,
+                        text="Hello")
+        self.timeText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,
                         text="Hello")
         
         if (ts.power==True):
@@ -268,10 +271,10 @@ class ThermostatScreen:
     
     def refreshEcoState(self):
         if(ts.ecoState()):
-            self.ecoCanvas.itemconfig(self.ecoImage, state = 'normal')   
+            self.canvas.itemconfig(self.ecoImage, state = 'normal')   
 
         else:           
-            self.ecoCanvas.itemconfig(self.ecoImage, state = 'hidden')   
+            self.canvas.itemconfig(self.ecoImage, state = 'hidden')   
 
         
     def quit(self):
