@@ -139,9 +139,7 @@ class ThermostatScreen:
         self.eco= Image.open(self.fullpath+'/images/eco1.png')
         self.eco= self.eco.resize((80, 80), Image.ANTIALIAS)
         self.eco = ImageTk.PhotoImage(self.eco)
-
-        
-      
+ 
         #BOTTOM CANVAS
         self.canvas = Canvas(parent, width=480, height=280, bg=bg, bd=0, highlightthickness=0, relief='ridge')
         self.canvas.place(relx=1, rely=0,anchor=tk.NE)    
