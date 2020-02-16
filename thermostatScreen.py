@@ -143,11 +143,9 @@ class ThermostatScreen:
         #BOTTOM CANVAS
         self.canvas = Canvas(parent, width=480, height=320, bg=bg, bd=0, highlightthickness=0, relief='ridge')
         self.canvas.place(relx=1, rely=0,anchor=tk.NE)    
-        
-        #ECO IMAGE
-
             
         
+        #DEFINE COLOR OF PICTURES
         # self.power = ImageTk.PhotoImage(self.power)
         self.power = self.power.convert('RGBA')
         self.dataPowerUp= np.array(self.power)
@@ -166,13 +164,21 @@ class ThermostatScreen:
         self.power=self.canvas.create_image(40, 35, image=self.powerDown)
         self.image=self.canvas.create_image(440, 35, image=self.sun)
 
-        self.weatherIcon=self.canvas.create_image(200,35, image=self.weather)
+        self.weatherIcon=self.canvas.create_image(200,35, image=self.weather, tag='weather')
         self.ecoImage=self.canvas.create_image(100, 80, image=self.eco)
         self.canvas.itemconfig(self.ecoImage, state = 'hidden')  
         self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,
-                        text="Hello")
-        self.timeText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,
-                        text="Hello")
+                        text=str(ts.weatherTemp) + 'º', stipple='error', tag='weather')
+        #SELECTED TEMPERATURE
+        self.timeText=self.canvas.create_text(250,155,fill=twhite,font=self.fnt2,
+                        text="%0.1f%s" % (20.8 , self.gradeSymbol))
+        #PLUS/MINUS BUTTON
+        self.minusButton=self.canvas.create_text(110,130,fill=tblue,font=self.fnt3, text="-")
+        self.plusButton=self.canvas.create_text(360,143,fill=tblue,font=self.fnt3, text="+")  
+        self.canvas.tag_bind(self.minusButton, '<Button-1>', self.restaD)
+        self.canvas.tag_bind(self.minusButton, '<ButtonRelease-1>', self.restaU)
+        self.canvas.tag_bind(self.plusButton, '<Button-1>', self.sumaD)
+        self.canvas.tag_bind(self.plusButton, '<ButtonRelease-1>', self.sumaU)
         
         if (ts.power==True):
             self.power=self.canvas.create_image(40, 35, image=self.powerUp)
@@ -323,7 +329,13 @@ class ThermostatScreen:
         
     def refresh_tempLabel(self):
         # self.tempLabel.configure(text="%s%sC" % (str(np.around(ts.desiredT, decimals=1)) , self.gradeSymbol))
-        self.tempLabel.configure(text="%0.1f%s" % (ts.desiredT , self.gradeSymbol))
+        # self.tempLabel.configure(text="%0.1f%s" % (ts.desiredT , self.gradeSymbol))
+        self.canvas.itemconfig(self.timeText,text=str(ts.desiredT) + 'º')
+        # self.canvas.itemconfig(self.weatherText,text=str(ts.weatherTemp) + 'º')
+        self.canvas.itemconfig(self.weatherText,text=str(ts.weatherTemp) + 'º')
+        # self.canvas.delete(self.weatherText)
+        # self.weatherText=self.canvas.create_text(270,30,fill=twhite,font=self.fnt1,
+        #                 text=str(ts.weatherTemp) + 'º', stipple='error')
         
     def refresh_tempLabel_full(self):
         # self.tempLabel.configure(text="%s%sC" % (str(np.around(ts.desiredT, decimals=1)) , self.gradeSymbol))
