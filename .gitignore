@@ -1,5 +1,8 @@
 *.pyc
 *.csv
+*.log
+.vscode/*
+__pycache__/*
 functiontest/*.csv
 /env/*
 /venv/*

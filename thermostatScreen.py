@@ -1,9 +1,7 @@
 import sys
 if sys.version_info[0] < 3:
-    print("Carga librerias Python 2")
     PVERSION=2
 else:
-    print("Carga librerias Python 3")
     PVERSION=3
 
 # import tkinter
@@ -37,6 +35,22 @@ import matplotlib.pyplot as plt
 #lineCollection
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# create a file handler
+handler = logging.FileHandler('thermostat.log')
+handler.setLevel(logging.INFO)
+
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# add the file handler to the logger
+logger.addHandler(handler)
+
 
 bg='#1d1d1d'
 bg='#32174d'
@@ -46,6 +60,7 @@ tblue='#a9b7ff'
 tyellow='#fff1a9'
 twhite='#ffffff'
 iteration=False
+
 
 class ThermostatScreen:
  
@@ -326,7 +341,7 @@ class ThermostatScreen:
                 self.ax.plot(x,z)
                 self.fig.canvas.draw_idle()
             except Exception as ex:
-                print(ex)
+                logger.error(ex)
             # self.fig.canvas.flush_events()
             self.count=0
             ts.refreshDataListener=False
@@ -336,7 +351,6 @@ class ThermostatScreen:
             self.weather = ImageTk.PhotoImage(self.weather)
             self.canvas.itemconfig(self.weatherIcon, image = self.weather)
             self.canvas.itemconfig(self.weatherText,text=str(ts.weatherTemp) + 'º ' + str(ts.weatherHumidity)+'%')
-            print(ts.weatherHumidity)
             
         if(ts.refreshDesiredConf):
             self.refresh_tempLabel_full()

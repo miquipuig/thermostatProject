@@ -1,3 +1,4 @@
+
 # import Adafruit_DHT
 # import RPi.GPIO as GPIO
 import threading
@@ -6,8 +7,25 @@ import time
 from datetime import datetime
 from thermostatService import ts
 import random
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# create a file handler
+handler = logging.FileHandler('thermostat.log')
+handler.setLevel(logging.INFO)
+
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# add the file handler to the logger
+logger.addHandler(handler)
+
+
 # sensor = Adafruit_DHT.DHT22
-pin = 26
+# pin = 26
 
 
 class ThermostatGPIO():
@@ -16,10 +34,8 @@ class ThermostatGPIO():
     temperature=np.ones(7)*20
     humidity=np.ones(7)*50
 
-
-    
     def callback_init(self):
-        print('callback init')
+        logging.info('callback init')
         # Corrriente pin 13
 
     def _callbackA(self,channel):
@@ -60,14 +76,15 @@ class ThermostatGPIO():
                     count+=1
                 else:
                     ts.updateHomeClimate(np.median(self.temperature), np.median(self.humidity))
-                print(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+' - '+"Temp={0:0.2f}*C Humidity={1:0.1f}%".format(t, h)+" Temp_median="+str(np.median(self.temperature)))
+                    
+                logger.info(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+' - '+"Temp={0:0.2f}*C Humidity={1:0.1f}%".format(t, h)+" Temp_median="+str(np.median(self.temperature)))
+                # print(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+' - '+"Temp={0:0.2f}*C Humidity={1:0.1f}%".format(t, h)+" Temp_median="+str(np.median(self.temperature)))
                 
                 # https://api.openweathermap.org/data/2.5/weather?zip=08014,es&appid=35bef01f2be23b616aa0457916b79b5d
-                
-               
-        
+
             else:
-                print("Failed to get data from sensor.") 
+                logger.warning('Failed to get data from sensor')
+                # print("Failed to get data from sensor.") 
                 ts.errors=True
             
                   
@@ -95,7 +112,7 @@ class ThermostatGPIO():
                     upState=True
             
             except Exception as ex:
-                print(ex)
+                logger.error(ex)
                 # GPIO.output(13,GPIO.LOW)
                 ts.errors=True
 

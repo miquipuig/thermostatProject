@@ -1,3 +1,5 @@
+import logging
+
 import Adafruit_DHT
 import RPi.GPIO as GPIO
 import threading
@@ -10,9 +12,10 @@ from thermostatService import ts
 import random
 sensor = Adafruit_DHT.DHT22
 pin = 26 #PIN SENSOR DHT22 - 26
-
+logging.basicConfig(level=logging.INFO)
 
 class ThermostatGPIO():
+    
     gpioB = 16 #Rotatory sensor - 16 & 12
     gpioA = 12 #Rotatory sensor - 16 & 12
     gpioC = 21

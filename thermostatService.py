@@ -5,8 +5,24 @@ import random
 from thermostatHistory import ThermostatHistory
 import requests
 import json
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# create a file handler
+handler = logging.FileHandler('thermostat.log')
+handler.setLevel(logging.INFO)
+
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# add the file handler to the logger
+logger.addHandler(handler)
+
 
 class ThermostatService:
+    
     
     temp = 19
     humidity = 44
@@ -87,7 +103,7 @@ class ThermostatService:
                 self.weatherDesciption=json.loads(json.dumps(resp_dict['weather'][0]))['description']
             except Exception as ex:
                 self.online=False
-                print(ex)
+                logger.error(ex)
         self.weatherCounter+=1
         
     def setTemperature(self, temp):
@@ -152,33 +168,25 @@ class ThermostatService:
     def startHeater(self):
         now = datetime.now()
         #Si se baja la temperatura
-        # print('desiredT: '+str(self.desiredT) + 'temp: '+str(self.temp))
         if((self.desiredT > self.temp) and self.power==True):
-            # print(1)
             #Turn on
             if (self.onTimer<=datetime.now()):
-                # print(11)
                 self.started=True
                 self.offTimer=datetime.now()+timedelta(minutes=self.offTime)
             self.tAchieved=False
 
         elif((self.desiredT == self.temp) and self.power==True):
-            # print(2)
             self.tAchieved=True
             #Turn off       
             if(self.offTimer<=datetime.now()):
-                # print(21)
                 self.started=False
                 self.onTimer=datetime.now()+timedelta(minutes=self.onTime)
         elif(self.power==True):
-            # print(3)
             self.tAchieved=False    
             if(self.offTimer<=datetime.now()):
-                # print(31)
                 self.started=False
                 self.onTimer=datetime.now()+timedelta(minutes=self.onTime)          
         elif(self.power==False):
-            print(4)
             self.started=False
             self.tAchieved=False
             self.resetSaveHeater()
