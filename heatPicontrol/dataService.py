@@ -2,7 +2,7 @@
 from datetime import datetime,timedelta
 import numpy as np
 import random
-from thermostatHistory import ThermostatHistory
+from .history import ThermostatHistory
 import requests
 import json
 import logging

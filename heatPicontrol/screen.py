@@ -19,12 +19,14 @@ except ImportError:
 import time as time
 import datetime
 import threading
+import random
 #images
 from PIL import Image, ImageTk
 import numpy as np
 import os, sys
-from thermostatService import ts
-import random
+from .dataService import ts
+from . import *
+
 
 
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
@@ -135,23 +137,23 @@ class ThermostatScreen:
         self.pathname = os.path.dirname(sys.argv[0])
         self.fullpath = os.path.abspath(self.pathname)
         
-        self.weather=Image.open(self.fullpath+'/images/weather/'+ts.weatherIcon+'.png')
+        self.weather=Image.open(self.fullpath+IMG_WEATHER_PATH+ts.weatherIcon+'.png')
         self.weather= self.weather.resize((80, 80), Image.ANTIALIAS)
         self.weather = ImageTk.PhotoImage(self.weather)
         
         
-        self.moon= Image.open(self.fullpath+'/images/moon3.png')
+        self.moon= Image.open(self.fullpath+IMG_PATH+'moon3.png')
         self.moon= self.moon.resize((100, 100), Image.ANTIALIAS)
         self.moon = ImageTk.PhotoImage(self.moon)
      
-        self.sun= Image.open(self.fullpath+'/images/sun2.png')
+        self.sun= Image.open(self.fullpath+IMG_PATH+'sun2.png')
         self.sun= self.sun.resize((60, 60), Image.ANTIALIAS)
         self.sun = ImageTk.PhotoImage(self.sun)
         
-        self.power= Image.open(self.fullpath+'/images/power7.png') 
+        self.power= Image.open(self.fullpath+IMG_PATH+'power7.png') 
         self.power= self.power.resize((50, 50), Image.ANTIALIAS)
         
-        self.eco= Image.open(self.fullpath+'/images/eco1.png')
+        self.eco= Image.open(self.fullpath+IMG_PATH+'eco1.png')
         self.eco= self.eco.resize((80, 80), Image.ANTIALIAS)
         self.eco = ImageTk.PhotoImage(self.eco)
  
@@ -346,7 +348,7 @@ class ThermostatScreen:
             self.count=0
             ts.refreshDataListener=False
             ts.refreshDesiredConf=True
-            self.weather=Image.open(self.fullpath+'/images/weather/'+ts.weatherIcon+'.png')
+            self.weather=Image.open(self.fullpath+IMG_WEATHER_PATH+ts.weatherIcon+'.png')
             self.weather= self.weather.resize((80, 80), Image.ANTIALIAS)
             self.weather = ImageTk.PhotoImage(self.weather)
             self.canvas.itemconfig(self.weatherIcon, image = self.weather)

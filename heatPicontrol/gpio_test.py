@@ -5,23 +5,9 @@ import threading
 import numpy as np
 import time
 from datetime import datetime
-from thermostatService import ts
+from .dataService import ts
 import random
-import logging
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-# create a file handler
-handler = logging.FileHandler('thermostat.log')
-handler.setLevel(logging.INFO)
-
-# create a logging format
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-
-# add the file handler to the logger
-logger.addHandler(handler)
+from . import *
 
 
 # sensor = Adafruit_DHT.DHT22

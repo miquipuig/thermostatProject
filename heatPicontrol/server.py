@@ -3,7 +3,7 @@ from flask import json
 from flask import jsonify
 from flask import request
 import threading
-from thermostatService import ts
+from .dataService import ts
 
 
 

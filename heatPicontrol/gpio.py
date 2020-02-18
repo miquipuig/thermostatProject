@@ -1,6 +1,4 @@
-import logging
 
-import Adafruit_DHT
 import RPi.GPIO as GPIO
 import threading
 import numpy as np
@@ -8,11 +6,12 @@ import Adafruit_DHT
 import RPi.GPIO as GPIO
 import time
 from datetime import datetime
-from thermostatService import ts
+from .dataService import ts
+from . import *
 import random
 sensor = Adafruit_DHT.DHT22
 pin = 26 #PIN SENSOR DHT22 - 26
-logging.basicConfig(level=logging.INFO)
+
 
 class ThermostatGPIO():
     

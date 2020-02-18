@@ -2,17 +2,18 @@ import signal
 import multiprocessing
 import time
 import sys
-#Import Project libraries
+import os
+
 env='PRO'
 if(len(sys.argv)>1 and sys.argv[1]=='test'):
     env='TST'
 
 
-from thermostatScreen import ThermostatScreen
-from thermostatServer import ThermostatServer
-from thermostatService import ts
-from thermostatSensor import ThermostatSensor
-from thermostatSave import ThermostatSave
+from .screen import ThermostatScreen
+from .server import ThermostatServer
+from .dataService import ts
+from .sensorThread import ThermostatSensor
+from .saveThread import ThermostatSave
 
 
 
