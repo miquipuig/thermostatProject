@@ -6,3 +6,4 @@ __pycache__/*
 functiontest/*.csv
 /env/*
 /venv/*
+/logs/*.log
