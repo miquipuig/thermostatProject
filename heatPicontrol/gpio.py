@@ -74,7 +74,7 @@ class ThermostatGPIO():
                     count+=1
                 else:
                     ts.updateHomeClimate(np.median(self.temperature), np.median(self.humidity))
-                print(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+' - '+"Temp={0:0.2f}*C Humidity={1:0.1f}%".format(t, h)+" Temp_median="+str(np.median(self.temperature)))
+                logger.info(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+' - '+"Temp={0:0.2f}*C Humidity={1:0.1f}%".format(t, h)+" Temp_median="+str(np.median(self.temperature)))
                 
                 # https://api.openweathermap.org/data/2.5/weather?zip=08014,es&appid=35bef01f2be23b616aa0457916b79b5d
                 
@@ -84,7 +84,7 @@ class ThermostatGPIO():
                     GPIO.output(13,GPIO.LOW)
         
             else:
-                print("Failed to get data from sensor.") 
+                logger.warning("Failed to get data from sensor.") 
                 GPIO.output(13,GPIO.LOW)
                 ts.errors=True
             
@@ -113,7 +113,7 @@ class ThermostatGPIO():
                     upState=True
             
             except Exception as ex:
-                print(ex)
+                logger.error(ex)
                 GPIO.output(13,GPIO.LOW)
                 ts.errors=True
 

@@ -1,8 +1,13 @@
+from logging.handlers import TimedRotatingFileHandler
+
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 # create a file handler
-handler = logging.FileHandler('thermostat.log')
+logname='logs/thermostatss.log'
+handler = TimedRotatingFileHandler(logname, when="midnight", interval=1)
+handler.suffix = "%Y%m%d"
+# handler = logging.FileHandler('logs/thermostat.log')
 handler.setLevel(logging.INFO)
 # create a logging format
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
