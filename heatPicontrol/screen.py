@@ -27,8 +27,6 @@ import os, sys
 from .dataService import ts
 from . import *
 
-
-
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 # Implement the default Matplotlib key bindings.
 from matplotlib.backend_bases import key_press_handler
@@ -37,39 +35,15 @@ import matplotlib.pyplot as plt
 #lineCollection
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
-import logging
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-# create a file handler
-handler = logging.FileHandler('thermostat.log')
-handler.setLevel(logging.INFO)
-
-# create a logging format
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-
-# add the file handler to the logger
-logger.addHandler(handler)
-
-
-bg='#1d1d1d'
-bg='#32174d'
-tred='#ffa9b7'
-tgreen='#a9fff1'
-tblue='#a9b7ff'
-tyellow='#fff1a9'
-twhite='#ffffff'
 iteration=False
-
 
 class ThermostatScreen:
  
-    def __init__(self,env):
+    def __init__(self):
         
         self.root = tk.Tk()
-        if(env=='PRO'):
+        if(env=='production'):
             self.root.attributes("-fullscreen", True)
             self.root.config(cursor='none')
         self.root.wm_attributes("-topmost", True)

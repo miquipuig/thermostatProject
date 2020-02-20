@@ -1,7 +1,7 @@
 import threading
 import sys
-if(len(sys.argv)>1 and sys.argv[1]=='test'):
-    env='TST'
+from . import *
+if(env=='testing'):
     from .gpio_test import tg
 else:
     from .gpio import tg
