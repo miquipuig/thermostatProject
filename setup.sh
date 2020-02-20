@@ -11,9 +11,8 @@ sudo apt-install libtiff5
 sudo apt-get install libatlas-base-dev
 sudo apt install python3-venv
 pip3 install virtualenv
-python3 -c "import sys; print(sys.path)"
-sudo rm -r venv
-virtualenv venv
+# sudo rm -r venv
+# virtualenv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
 sudo apt-get install python3-tk
