@@ -1,5 +1,5 @@
 #!/bin/bash
-echo 'hola'
+
 sudo apt-get install fontconfig
 sudo cp -R thermoFonts /usr/share/fonts
 sudo apt-get install build-essential python-dev python-setuptools python-pip python-smbus -y

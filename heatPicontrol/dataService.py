@@ -17,24 +17,10 @@
 from datetime import datetime,timedelta
 import numpy as np
 import random
-from .history import ThermostatHistory
+from .historicData import ThermostatHistory
+from . import *
 import requests
 import json
-import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-# create a file handler
-handler = logging.FileHandler('thermostat.log')
-handler.setLevel(logging.INFO)
-
-# create a logging format
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-
-# add the file handler to the logger
-logger.addHandler(handler)
-
 
 class ThermostatService:
     
@@ -51,8 +37,8 @@ class ThermostatService:
     weatherDesciption=' '
     
     #Inital Temperatures
-    desiredT = 20.2
-    desiredMoonT=18
+    desiredT = 21.5
+    desiredMoonT=19.5
     desiredSunT=20
     moonSun='sun' #Day or night
     
@@ -85,7 +71,6 @@ class ThermostatService:
         self.desiredT 
         self.power = power
     
-    
     def updateHomeClimate(self, temp, relativeHumidity):
         self.updateWheather()
         self.temp = np.around(temp, decimals=1)
@@ -93,12 +78,17 @@ class ThermostatService:
         self.humidity = relativeHumidity
         self.refreshDataListener=True
         
-        if(self.compressCounter<25):
+        if(self.compressCounter<COMPRESS_COUNTER):
             self.compressCounter+=1
         else:
-            self.th.compress()
+            print('a')
+            try:
+                self.th.compress()
+            except Exception as ex:
+                logger.error('Compress Error')
+                logger.error(ex)
             self.compressCounter=0
-        # self.th.storeData()
+        # self.th.storeData() -> Now included inside compress function
         
     def addCallbackFunction(self, function):
         self.tvCallbackFunction=function
@@ -144,8 +134,7 @@ class ThermostatService:
             self.refreshDesiredConf=True
             self.dayNightSaveTemperature()
         self.resetSaveHeater()
-
-        
+   
     def decreaseTemperature(self):
         if(self.desiredT>10):
             self.desiredT = round(self.desiredT - 0.1,1)

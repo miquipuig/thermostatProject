@@ -229,9 +229,16 @@ class ThermostatScreen:
         canvasFigure.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=2)
         canvasFigure.get_tk_widget().place(relx=0.5, rely=0.625,anchor=tk.N)
 
-        x=ts.th.extractHistoricData(0)
-        y=ts.th.extractHistoricData(1)
-        z=ts.th.extractHistoricData(2)
+        #It need a semaphore like a atomic function -  concurrency problems
+        # x=ts.th.extractHistoricData(0)
+        # y=ts.th.extractHistoricData(1)
+        # z=ts.th.extractHistoricData(2)
+
+        data=ts.th.extractHistoricData([0,1,2])
+        x=data[0]
+        y=data[1]
+        z=data[2]
+        
         # x = [datetime.datetime.now() + datetime.timedelta(hours=i) for i in range(12)]
         # y = [i+random.gauss(0,1) for i,_ in enumerate(x)]
         self.ax.plot(x,y,linewidth=2)
@@ -324,9 +331,12 @@ class ThermostatScreen:
             #DIAGRAM
             # ts.updateFake()
             # self.y.set_xdata(ts.historicData[0]) 
-            x=ts.th.extractHistoricData(0)
-            y=ts.th.extractHistoricData(1)
-            z=ts.th.extractHistoricData(2)
+            
+            data=ts.th.extractHistoricData([0,1,2])
+            x=data[0]
+            y=data[1]
+            z=data[2]
+  
             try:
                 self.ax.clear()
                 self.ax.plot(x,y,linewidth=3)

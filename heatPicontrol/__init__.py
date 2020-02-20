@@ -17,6 +17,22 @@
 from logging.handlers import TimedRotatingFileHandler
 import logging
 import sys
+import os
+#Crete runtime Data directories
+LOGS_PATH='logs'
+HISTORIC_PATH='historicData'
+try:
+    os.mkdir(LOGS_PATH)
+    print("Directory " , LOGS_PATH ,  " Created ")
+except:
+    print("Directory " , LOGS_PATH ,  " already exists")
+    
+try:
+    os.mkdir(HISTORIC_PATH)
+    print("Directory " , HISTORIC_PATH ,  " Created ")
+except:
+    print("Directory " , HISTORIC_PATH ,  " already exists")
+    
 
 env='production'
 if(len(sys.argv)>1 and sys.argv[1]=='test'):
@@ -27,9 +43,9 @@ elif(len(sys.argv)>1 and sys.argv[1]=='staging'):
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 # create a file handler
-logname='logs/thermostatss.log'
+logname=LOGS_PATH+'/thermostat.log'
 handler = TimedRotatingFileHandler(logname, when="midnight", interval=1)
-handler.suffix = "%Y%m%d"
+handler.prefix = "%Y%m%d"
 # handler = logging.FileHandler('logs/thermostat.log')
 if(env=='testing'):
     handler.setLevel(logging.INFO)
@@ -47,6 +63,8 @@ logger.addHandler(handler)
 #GLOBAL VARIABLES
 IMG_PATH='/resources/img/'
 IMG_WEATHER_PATH='/resources/img/weather/'
+DAY_BREAF_PATH=HISTORIC_PATH+'/dayBreaf-'
+COMPRESS_COUNTER=1 #25
 
 #Colors
 bg='#1d1d1d'

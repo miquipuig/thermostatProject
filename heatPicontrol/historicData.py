@@ -17,6 +17,8 @@
 from datetime import datetime,timedelta
 import numpy as np
 import random
+from . import *
+
 class ThermostatHistory:
 
     historicData = []
@@ -50,7 +52,6 @@ class ThermostatHistory:
             data3.append(section[x][3])
         return [tm,np.around(np.median(data1),decimals=1),np.around(np.mean(data2),decimals=1),np.around(np.mean(data3),decimals=1)]
     def compress(self,rTime=1):
-        print('comppress')
         try:
             lastDate=datetime.now()-timedelta(minutes=rTime*1.5)
             roundLastDate=self.roundTime(lastDate,rTime)
@@ -67,14 +68,17 @@ class ThermostatHistory:
                 #reset index
                 i=0
         except Exception as ex:
+            
             print(ex)   
         
         self.storeData()
         
     def loadData(self, data=datetime.now().strftime("%Y-%m-%d")):
         try:
-            historicFile=open('historicData-'+data+'.csv','r')
-        except:
+            historicFile=open(DAY_BREAF_PATH+data+'.csv','r')
+        except Exception as ex:
+            logger.warning('loadData - Historic Data not found ')
+            logger.warning(ex)
             return
         lines=historicFile.read().split('\n')
         for i in range(len(lines)-1):
@@ -85,55 +89,71 @@ class ThermostatHistory:
     def storeData(self):
         try:
             data=self.compressData[0][0].strftime("%Y-%m-%d")
-        except:
+            print(data)
+        except Exception as ex:
+            logger.info('storeData - not enough data')
             return
-        dataFinish=self.compressData[len(self.compressData)-1][0].strftime("%Y-%m-%d")
-        historicFile=open('historicData-'+data+'.csv','a+')
-        if(data==dataFinish):
-            for i in range(len(self.compressData)):
-                historicFile.write(self.compressData[i][0].strftime("%Y-%m-%d %H:%M:%S"))
-                historicFile.write(',')
-                historicFile.write(str(self.compressData[i][1]))
-                historicFile.write(',')
-                historicFile.write(str(self.compressData[i][2]))
-                historicFile.write(',')
-                historicFile.write(str(self.compressData[i][3]))
-                historicFile.write('\n')
-            historicFile.close()
-            if(len(self.storedData)>0):
-                if(self.storedData[len(self.storedData)-1][0].strftime("%Y-%m-%d")==dataFinish):
-                    self.storedData=self.storedData+self.compressData
+        try:
+            dataFinish=self.compressData[len(self.compressData)-1][0].strftime("%Y-%m-%d")
+            historicFile=open(DAY_BREAF_PATH+data+'.csv','a+')
+            if(data==dataFinish):
+                for i in range(len(self.compressData)):
+                    historicFile.write(self.compressData[i][0].strftime("%Y-%m-%d %H:%M:%S"))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][1]))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][2]))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][3]))
+                    historicFile.write('\n')
+                historicFile.close()
+                if(len(self.storedData)>0):
+                    if(self.storedData[len(self.storedData)-1][0].strftime("%Y-%m-%d")==dataFinish):
+                        self.storedData=self.storedData+self.compressData
+                    else:
+                        self.storedData=self.compressData
                 else:
                     self.storedData=self.compressData
             else:
-                self.storedData=self.compressData
-        else:
-            for i in range(len(self.compressData)):
-                if(data!=self.compressData[i][0].strftime("%Y-%m-%d")):
-                    data=self.compressData[i][0].strftime("%Y-%m-%d")
-                    historicFile.close()
-                    historicFile=open('historicData-'+data+'.csv','a+')
-                    lastDate=i
-                historicFile=open('historicData.csv'+self.compressData[i][0].strftime("%Y-%m-%d"),'a+')
-                historicFile.write(self.compressData[i][0].strftime("%Y-%m-%d %H:%M:%S"))
-                historicFile.write(',')
-                historicFile.write(str(self.compressData[i][1]))
-                historicFile.write(',')
-                historicFile.write(str(self.compressData[i][2]))
-                historicFile.write(',')
-                historicFile.write(str(self.compressData[i][3]))
-                historicFile.write('\n')
-                historicFile.close()   
-            self.storedData=self.compressData[i:(len(self.compressData)-1)]
-        self.compressData=[]
+                for i in range(len(self.compressData)):
+                    if(data!=self.compressData[i][0].strftime("%Y-%m-%d")):
+                        data=self.compressData[i][0].strftime("%Y-%m-%d")
+                        historicFile.close()
+                        historicFile=open(DAY_BREAF_PATH+data+'.csv','a+')
+                        lastDate=i
+                    historicFile=open(DAY_BREAF_PATH+self.compressData[i][0].strftime("%Y-%m-%d")+'.csv','a+')
+                    historicFile.write(self.compressData[i][0].strftime("%Y-%m-%d %H:%M:%S"))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][1]))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][2]))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][3]))
+                    historicFile.write('\n')
+                    historicFile.close()   
+                self.storedData=self.compressData[i:(len(self.compressData)-1)]
+            self.compressData=[]
+        except Exception as ex:
+            logger.error('storeData - Cannot save de historic file: ' +ex)
       
-    def extractHistoricData(self,num):
+    # def extractHistoricData(self,num):
+    #     history=self.storedData+self.compressData+self.historicData
+    #     data=[]
+    #     for i in range(len(history)):
+    #         data.append(history[i][num])
+    #     return data
+    
+    def extractHistoricData(self,numlist):
         history=self.storedData+self.compressData+self.historicData
-        data=[]
-        for i in range(len(history)):
-            data.append(history[i][num])
-        return data
-             
+        list=[]
+        for i in range(len(numlist)):
+            data=[]
+            for j in range(len(history)):
+                operator=numlist[i]
+                data.append(history[j][operator])
+            list.append(data)              
+        return list
+            
     def updateFake(self):
         for i in range(20):
             self.historicData.append([datetime.now()+timedelta(hours=i)+timedelta(hours=20*self.fakecounter),20+random.gauss(-4,4),20+random.gauss(0,2),50+random.gauss(-50,50)])

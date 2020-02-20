@@ -4,6 +4,10 @@
 .vscode/*
 __pycache__/*
 functiontest/*.csv
-/env/*
-/venv/*
-/logs/*.log
+env/*
+venv/*
+logs/*
+historicData/*
+!historicData/.gitkeep 
+heatPicontrol/__pycache__/*
+!logs/.gitkeep 
