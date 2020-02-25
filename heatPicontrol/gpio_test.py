@@ -76,7 +76,12 @@ class ThermostatGPIO():
                 # print(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+' - '+"Temp={0:0.2f}*C Humidity={1:0.1f}%".format(t, h)+" Temp_median="+str(np.median(self.temperature)))
                 
                 # https://api.openweathermap.org/data/2.5/weather?zip=08014,es&appid=35bef01f2be23b616aa0457916b79b5d
-
+                
+                ts.changeDayNight()
+                if (ts.startHeater()):
+                    print('GPIO - ts.startHeater True')
+                else:
+                    print('GPIO - ts.startHeater False')
             else:
                 logger.warning('Failed to get data from sensor')
                 # print("Failed to get data from sensor.") 

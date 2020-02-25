@@ -28,7 +28,7 @@ from .saveThread import ThermostatSave
 if __name__ == "__main__":
 
     tv=ThermostatScreen()
-    ts.addCallbackFunction(tv.refresh_tempLabel)
+    ts.addCallbackFunctions(tv)
     tsave=ThermostatSave()  
     tt=ThermostatSensor()
     tw=ThermostatServer()

@@ -103,7 +103,7 @@ class ThermostatGPIO():
                 GPIO.output(13,GPIO.LOW)
                 ts.errors=True
             
-                  
+            ts.changeDayNight()    
             
             # except Exception as ex:
             #     print(ex)

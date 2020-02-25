@@ -17,14 +17,13 @@
 from datetime import datetime,timedelta
 import numpy as np
 import random
+import os
 from .historicData import ThermostatHistory
 from . import *
 import requests
 import json
 
-class ThermostatService:
-    
-    
+class ThermostatService:   
     temp = 19
     humidity = 44
     
@@ -40,11 +39,18 @@ class ThermostatService:
     desiredT = 21.5
     desiredMoonT=19.5
     desiredSunT=20
+    #Day night Control
     moonSun='sun' #Day or night
+    sunTime="08:00"
+    moonTime="00:45"
+    dayNightChange=True
+    
     
 
     #States
     online=True
+    ip=None
+    ip_external=None
     errors=False
     power = None
     started = False #
@@ -72,16 +78,17 @@ class ThermostatService:
         self.power = power
     
     def updateHomeClimate(self, temp, relativeHumidity):
+        
+        self.updateConnection()
         self.updateWheather()
         self.temp = np.around(temp, decimals=1)
-        self.th.historicData.append([datetime.now(),temp,self.desiredT,relativeHumidity])
+        self.th.historicData.append([datetime.now(),temp,self.desiredT,relativeHumidity,self.weatherHumidity])
         self.humidity = relativeHumidity
         self.refreshDataListener=True
         
         if(self.compressCounter<COMPRESS_COUNTER):
             self.compressCounter+=1
         else:
-            print('a')
             try:
                 self.th.compress()
             except Exception as ex:
@@ -90,9 +97,15 @@ class ThermostatService:
             self.compressCounter=0
         # self.th.storeData() -> Now included inside compress function
         
-    def addCallbackFunction(self, function):
-        self.tvCallbackFunction=function
+    def addCallbackFunctions(self, functions):
+        self.tv=functions
     
+    def updateConnection(self):
+        stream = os.popen("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/'")
+        self.ip = stream.read()
+        stream2 = os.popen("curl ifconfig.co 2>nul")
+        self.ip_external = stream2.read()
+        # print(self.ip_external)
     def updateWheather(self):
         if(self.weatherCounter>10):
             self.weatherCounter=0
@@ -106,6 +119,7 @@ class ThermostatService:
                 self.weatherHumidity=np.around(resp_dict['main']['humidity'],decimals=0)
                 self.weatherIcon=json.loads(json.dumps(resp_dict['weather'][0]))['icon']
                 self.weatherDesciption=json.loads(json.dumps(resp_dict['weather'][0]))['description']
+                self.online=True
             except Exception as ex:
                 self.online=False
                 logger.error(ex)
@@ -119,7 +133,7 @@ class ThermostatService:
     
     def ecoState(self):
         if(self.moonSun=='sun'):
-            if(self.desiredT<22 and self.power):
+            if(self.desiredT<=21 and self.power):
                 return True
         else:
             if(self.desiredT<20 and self.power):
@@ -129,8 +143,7 @@ class ThermostatService:
     def increaseTemperature(self):
         if(self.desiredT<28):
             self.desiredT =round(self.desiredT + 0.1,1)
-            # self.startHeater()
-            self.tvCallbackFunction()
+            self.tv.refresh_tempLabel()
             self.refreshDesiredConf=True
             self.dayNightSaveTemperature()
         self.resetSaveHeater()
@@ -138,11 +151,29 @@ class ThermostatService:
     def decreaseTemperature(self):
         if(self.desiredT>10):
             self.desiredT = round(self.desiredT - 0.1,1)
-            # self.startHeater()
-            self.tvCallbackFunction()
+            self.tv.refresh_tempLabel()
             self.refreshDesiredConf=True
             self.dayNightSaveTemperature()
         self.resetSaveHeater()
+        
+    def increaseSunTime(self):
+        stime= datetime.strptime(self.sunTime, "%H:%M")
+        stime=stime+timedelta(minutes=1)
+        self.sunTime=stime.strftime("%H:%M")
+    def increaseMoonTime(self):
+        mtime= datetime.strptime(self.moonTime, "%H:%M")
+        mtime=mtime+timedelta(minutes=1)
+        self.moonTime=mtime.strftime("%H:%M")
+    def decreaseSunTime(self):
+        stime= datetime.strptime(self.sunTime, "%H:%M")
+        stime=stime-timedelta(minutes=1)
+        self.sunTime=stime.strftime("%H:%M")
+    def decreaseMoonTime(self):
+        mtime= datetime.strptime(self.moonTime, "%H:%M")
+        mtime=mtime-timedelta(minutes=1)
+        self.moonTime=mtime.strftime("%H:%M")    
+        
+        # datetime.strptime(params[0], "%Y-%m-%d %H:%M:%S")
     def dayNightSaveTemperature(self):
         if(self.moonSun=='sun'):
             self.desiredSunT=self.desiredT
@@ -150,14 +181,13 @@ class ThermostatService:
             self.desiredMoonT=self.desiredT
     
     def dayNightLoadTemperature(self):
+
         if(self.moonSun=='sun'):
             self.desiredT=self.desiredSunT
         else:
             self.desiredT=self.desiredMoonT
         self.resetSaveHeater()
-        self.startHeater()
         self.refreshDesiredConf=True
-
         
     def diffTemperature(self):
         return (self.temp-self.desiredT)       
@@ -194,8 +224,7 @@ class ThermostatService:
             self.started=False
             self.tAchieved=False
             self.resetSaveHeater()
-        
-        self.refreshDesiredConf=True     
+        self.refreshDesiredConf=True    
         return self.onOff()
     
     def onOff(self):
@@ -215,4 +244,12 @@ class ThermostatService:
         self.onTimer=datetime.now()
         self.offTimer=datetime.now()
 
+    def changeDayNight(self):
+        now=datetime.now().strftime("%H:%M")
+        if(now==self.sunTime and self.moonSun=='moon' ):
+            self.moonSun='sun'
+            self.dayNightLoadTemperature()           
+        elif(now==self.moonTime and self.moonSun=='sun'):
+            self.moonSun='moon'
+            self.dayNightLoadTemperature()
 ts=ThermostatService(True)

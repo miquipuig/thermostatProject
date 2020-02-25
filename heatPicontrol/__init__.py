@@ -18,6 +18,11 @@ from logging.handlers import TimedRotatingFileHandler
 import logging
 import sys
 import os
+try:
+    import tkinter.font as tkFont
+
+except ImportError:
+    import tkFont
 #Crete runtime Data directories
 LOGS_PATH='logs'
 HISTORIC_PATH='historicData'
@@ -60,7 +65,14 @@ handler.setFormatter(formatter)
 # add the file handler to the logger
 logger.addHandler(handler)
 
+
+
 #GLOBAL VARIABLES
+
+PATHNAME = os.path.dirname(sys.argv[0])
+print(PATHNAME)
+PATHNAME = os.path.abspath(PATHNAME)+'/heatPicontrol'
+
 IMG_PATH='/resources/img/'
 IMG_WEATHER_PATH='/resources/img/weather/'
 DAY_BREAF_PATH=HISTORIC_PATH+'/dayBreaf-'
@@ -74,3 +86,4 @@ tgreen='#a9fff1'
 tblue='#a9b7ff'
 tyellow='#fff1a9'
 twhite='#ffffff'
+

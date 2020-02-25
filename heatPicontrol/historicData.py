@@ -45,12 +45,13 @@ class ThermostatHistory:
         return time
     
     def meanData(self,tm, section):
-        data1, data2, data3 = ([] for i in range(3))
+        data1, data2, data3, data4 = ([] for i in range(4))
         for x in range(len(section)):
             data1.append(section[x][1])
             data2.append(section[x][2])
             data3.append(section[x][3])
-        return [tm,np.around(np.median(data1),decimals=1),np.around(np.mean(data2),decimals=1),np.around(np.mean(data3),decimals=1)]
+            data3.append(section[x][4])
+        return [tm,np.around(np.median(data1),decimals=1),np.around(np.mean(data2),decimals=1),np.around(np.mean(data3),decimals=1),np.around(np.mean(data4),decimals=1)]
     def compress(self,rTime=1):
         try:
             lastDate=datetime.now()-timedelta(minutes=rTime*1.5)
@@ -83,7 +84,7 @@ class ThermostatHistory:
         lines=historicFile.read().split('\n')
         for i in range(len(lines)-1):
             params=lines[i].split(',')
-            self.storedData.append([datetime.strptime(params[0], "%Y-%m-%d %H:%M:%S"),float(params[1]),float(params[2]),float(params[3])])
+            self.storedData.append([datetime.strptime(params[0], "%Y-%m-%d %H:%M:%S"),float(params[1]),float(params[2]),float(params[3]),float(params[4])])
         historicFile.close()
 
     def storeData(self):
@@ -105,6 +106,8 @@ class ThermostatHistory:
                     historicFile.write(str(self.compressData[i][2]))
                     historicFile.write(',')
                     historicFile.write(str(self.compressData[i][3]))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][4]))
                     historicFile.write('\n')
                 historicFile.close()
                 if(len(self.storedData)>0):
@@ -129,6 +132,8 @@ class ThermostatHistory:
                     historicFile.write(str(self.compressData[i][2]))
                     historicFile.write(',')
                     historicFile.write(str(self.compressData[i][3]))
+                    historicFile.write(',')
+                    historicFile.write(str(self.compressData[i][4]))
                     historicFile.write('\n')
                     historicFile.close()   
                 self.storedData=self.compressData[i:(len(self.compressData)-1)]
@@ -156,5 +161,5 @@ class ThermostatHistory:
             
     def updateFake(self):
         for i in range(20):
-            self.historicData.append([datetime.now()+timedelta(hours=i)+timedelta(hours=20*self.fakecounter),20+random.gauss(-4,4),20+random.gauss(0,2),50+random.gauss(-50,50)])
+            self.historicData.append([datetime.now()+timedelta(hours=i)+timedelta(hours=20*self.fakecounter),20+random.gauss(-4,4),20+random.gauss(0,2),50+random.gauss(-50,50),50+random.gauss(-50,50)])
         self.fakecounter = self.fakecounter+1 
