@@ -3,6 +3,7 @@
 *.log
 *.DS_Store
 .vscode/*
+nul
 __pycache__/*
 functiontest/*.csv
 env/*
