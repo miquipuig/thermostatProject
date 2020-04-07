@@ -50,7 +50,7 @@ class ThermostatHistory:
             data1.append(section[x][1])
             data2.append(section[x][2])
             data3.append(section[x][3])
-            data3.append(section[x][4])
+            data4.append(section[x][4])
         return [tm,np.around(np.median(data1),decimals=1),np.around(np.mean(data2),decimals=1),np.around(np.mean(data3),decimals=1),np.around(np.mean(data4),decimals=1)]
     def compress(self,rTime=1):
         try:
