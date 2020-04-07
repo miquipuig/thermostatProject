@@ -103,7 +103,7 @@ class ThermostatService:
     def updateConnection(self):
         stream = os.popen("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/'")
         self.ip = stream.read()
-        stream2 = os.popen("curl ifconfig.co 2>nul")
+        stream2 = os.popen("curl ifconfig.co")
         self.ip_external = stream2.read()
         # print(self.ip_external)
     def updateWheather(self):
