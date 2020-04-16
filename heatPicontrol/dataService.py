@@ -76,6 +76,7 @@ class ThermostatService:
         self.temp 
         self.desiredT 
         self.power = power
+        self.weatherurl = 'https://api.openweathermap.org/data/2.5/weather?zip='+zip_code+'&appid='+appid+'&lang='+lang
     
     def updateHomeClimate(self, temp, relativeHumidity):
         
@@ -109,9 +110,8 @@ class ThermostatService:
     def updateWheather(self):
         if(self.weatherCounter>10):
             self.weatherCounter=0
-            url = 'https://api.openweathermap.org/data/2.5/weather?zip=08014,es&appid=35bef01f2be23b616aa0457916b79b5d&lang=ca'
             try:
-                response = requests.get(url)
+                response = requests.get(self.weatherurl)
                 resp_dict=json.loads(response.text)
                 self.weatherTemp=np.around(resp_dict['main']['temp']-273.15,decimals=1)
                 self.weatherTemp_min=np.around(resp_dict['main']['temp_min']-273.15,decimals=1)

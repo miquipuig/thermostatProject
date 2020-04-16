@@ -87,3 +87,8 @@ tblue='#a9b7ff'
 tyellow='#fff1a9'
 twhite='#ffffff'
 
+
+#openweathermap.org account
+zip_code='08014,es'
+appid='35bef01f2be23b616aa0457916b79b5d'
+lang='ca'
